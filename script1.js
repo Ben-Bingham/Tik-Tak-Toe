@@ -30,6 +30,15 @@ function buttonClick(index) {
     }
 
     movesMade++;
+
+    var moveNotMade = true;
+    while(moveNotMade) {
+        var randomNumber = Math.floor(Math.random() * 9);
+        if (board[randomNumber] == 0) {
+            moveNotMade = false;
+            board[randomNumber] = playersTurn;
+        }
+    }
 }
 
 function playAgain() {
