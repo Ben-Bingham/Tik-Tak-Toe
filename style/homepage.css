@@ -1,0 +1,14 @@
+.GameSelect {
+    margin: 10px;
+    text-align: center;
+}
+
+.modeSelect {
+    position: relative;
+    width: 10vw;
+}
+
+#Title h1 {
+    font-family: 'Trebuchet MS', sans-serif;
+    text-align: center;
+}
