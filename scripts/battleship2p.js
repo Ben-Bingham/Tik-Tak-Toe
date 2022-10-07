@@ -4,7 +4,7 @@ function makeBoard(width, height) {
     for (var y = 0; y < height; y++) {
         html += "<tr>";
         for (var x = 0; x < width; x++) {
-            html += "<td class=\"ButtonTD\" id=" + x.toString() + "," + y.toString() + "><div class=\"ButtonDiv\"><button class=\"Button\" onclick=\"buttonClick(" + x.toString() + ", " + y.toString() + ")\"></button></div></td>";
+            html += "<td class=\"ButtonTD\" id=" + x.toString() + "," + y.toString() + "><div class=\"ButtonDiv\"><button class=\"Button\" onclick=\"buildShips(" + x.toString() + ", " + y.toString() + ")\"></button></div></td>";
         }
         html += "</tr>";
     }
@@ -82,8 +82,8 @@ function changeTurn() {
     }
 }
 
-function buttonClick(x, y) {
-    var activeBoard = getActivePlayerBoard();
+function buildShips(x, y) {
+    console.log("Build ship");
     if (!player1ShipsPlaced) {
         if (activeBoard[x][y] == 0) {
             console.log(player1ShipSegmentsPlaced);
@@ -116,6 +116,11 @@ function buttonClick(x, y) {
         return;
     }
 
+}
 
-    setActiveBoardHTML(activeBoard);
+function buttonClick(x, y) {
+    console.log("Button click");
+    //var activeBoard = getActivePlayerBoard();
+
+    //setActiveBoardHTML(activeBoard);
 }
