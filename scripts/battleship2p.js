@@ -4,7 +4,7 @@ function makeBoard(width, height) {
     for (var y = 0; y < height; y++) {
         html += "<tr>";
         for (var x = 0; x < width; x++) {
-            html += "<td class=\"ButtonTD\" id=" + x.toString() + "," + y.toString() + "><div class=\"ButtonDiv\"><button class=\"Button\" onclick=\"buildShips(" + x.toString() + ", " + y.toString() + ")\"></button></div></td>";
+            html += "<td class=\"ButtonTD\" id=" + x.toString() + "," + y.toString() + "><div class=\"ButtonDiv\"><button class=\"Button\" onclick=\"buttonClick(" + x.toString() + ", " + y.toString() + ")\"></button></div></td>";
         }
         html += "</tr>";
     }
@@ -42,34 +42,50 @@ const player2Board = [
 makeBoard(10, 10);
 var playerTurn = 1;
 
-setActiveBoardHTML(getActivePlayerBoard());
+//setActiveBoardHTML(getActivePlayerBoard());
 
 var player1ShipsPlaced = false;
 var player1ShipSegmentsPlaced = 0;
 var player2ShipsPlaced = false;
 var player2ShipSegmentsPlaced = 0;
 
+function updateHTMLForBoardCordinate(x, y, board) {
+    if (board[x][y] == "ship") {
+        document.getElementById(x.toString() + "," + y.toString()).innerHTML = "<div class=\"ButtonDiv\"><button class=\"Button ship\" onclick=\"buttonClick(" + x.toString() + ", " + y.toString() + ")\"></button></div>";
+    }
+    else if (board[x][y] == "hitShip") {
+        document.getElementById(x.toString() + "," + y.toString()).innerHTML = "<div class=\"ButtonDiv\"><button class=\"Button hitShip\" onclick=\"buttonClick(" + x.toString() + ", " + y.toString() + ")\"></button></div>";
+    }
+    else if (board[x][y] == "miss") {
+        document.getElementById(x.toString() + "," + y.toString()).innerHTML = "<div class=\"ButtonDiv\"><button class=\"Button miss\" onclick=\"buttonClick(" + x.toString() + ", " + y.toString() + ")\"></button></div>";
+    }
+    else {
+        document.getElementById(x.toString() + "," + y.toString()).innerHTML = "<div class=\"ButtonDiv\"><button class=\"Button\" onclick=\"buttonClick(" + x.toString() + ", " + y.toString() + ")\"></button></div>";
+    }
+}
+
+function setBoardHTML(board) {
+    for (var x = 0; x < 10; x++) {
+        for (var y = 0; y < 10; y++) {
+            updateHTMLForBoardCordinate(x, y, board);
+        }
+    }
+}
+
+function displayPlayer1Board() {
+    setBoardHTML(player1Board);
+}
+
+function displayPlayer2Board() {
+    setBoardHTML(player2Board);
+}
+
 function getActivePlayerBoard() {
-    if (playerTurn = 1) {
+    if (playerTurn == 1) {
         return player1Board;
     }
     else {
         return player2Board;
-    }
-}
-
-function setActiveBoardHTML(board) {
-    var activeBoard = getActivePlayerBoard();
-
-    for (var x = 0; x < 10; x++) {
-        for (var y = 0; y < 10; y++) {
-            if (activeBoard[x][y] == "ship") {
-                document.getElementById(x.toString() + "," + y.toString()).innerHTML = "<div class=\"ButtonDiv\"><button class=\"Button ship\" onclick=\"buttonClick(" + x.toString() + ", " + y.toString() + ")\"></button></div>";
-            }
-            else if (activeBoard[x][y] == "hitShip") {
-                document.getElementById(x.toString() + "," + y.toString()).innerHTML = "<div class=\"ButtonDiv\"><button class=\"Button hitShip\" onclick=\"buttonClick(" + x.toString() + ", " + y.toString() + ")\"></button></div>";
-            }
-        }
     }
 }
 
@@ -82,45 +98,47 @@ function changeTurn() {
     }
 }
 
-function buildShips(x, y) {
-    console.log("Build ship");
+function buttonClick(x, y) {
     if (!player1ShipsPlaced) {
-        if (activeBoard[x][y] == 0) {
-            console.log(player1ShipSegmentsPlaced);
-            activeBoard[x][y] = "ship";
+        displayPlayer1Board();
+        if (player1Board[x][y] == 0) {
+            player1Board[x][y] = "ship";
             player1ShipSegmentsPlaced++;
 
-            if(player1ShipSegmentsPlaced > 20) {
+            if(player1ShipSegmentsPlaced > 3) {
                 player1ShipsPlaced = true;
+                displayPlayer2Board();
+                playerTurn = 2;
+                return;
             }
-        }
 
-        changeTurn();
-        setActiveBoardHTML(activeBoard);
+            displayPlayer1Board();
+        }
         return;
     }
 
     if (!player2ShipsPlaced) {
-        if (activeBoard[x][y] == 0) {
-            console.log(player2ShipSegmentsPlaced);
-            activeBoard[x][y] = "ship";
+        displayPlayer2Board();
+        if (player2Board[x][y] == 0) {
+            player2Board[x][y] = "ship";
             player2ShipSegmentsPlaced++;
 
-            if(player2ShipSegmentsPlaced > 20) {
+            if(player2ShipSegmentsPlaced > 3) {
                 player2ShipsPlaced = true;
+                displayPlayer1Board();
+                playerTurn = 1;
+                return;
             }
-        }
 
-        changeTurn();
-        setActiveBoardHTML(activeBoard);
+            displayPlayer2Board();
+        }
         return;
     }
 
-}
-
-function buttonClick(x, y) {
     console.log("Button click");
-    //var activeBoard = getActivePlayerBoard();
+    setBoardHTML(getActivePlayerBoard());
+    console.log(playerTurn);
+    console.log("gameplay");
 
-    //setActiveBoardHTML(activeBoard);
+    changeTurn();
 }
